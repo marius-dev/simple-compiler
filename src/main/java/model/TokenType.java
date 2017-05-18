@@ -1,0 +1,30 @@
+package model;
+
+public enum  TokenType {
+    ID,
+    REAL,
+    OCT,
+    BIN,
+    HEX,
+    INT,
+    SIR,
+    CH_CON,
+    BEGIN,
+    END,
+    IF,
+    THEN,
+    ELSE,
+    DOTS,
+    DOT,
+    COMMA,
+    EQUAL,
+    DDOTS,
+    LESS_EQUAL,
+    PLUS,
+    SEMI,
+    L_PAREN,
+    R_PAREN,
+    BAD,
+    EOF,
+
+}
