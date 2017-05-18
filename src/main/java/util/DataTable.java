@@ -45,6 +45,8 @@ public class DataTable {
         specialCharacters .add(new TokenAttribute("=", TokenType.EQUAL));
         specialCharacters .add(new TokenAttribute(".", TokenType.DOT));
         specialCharacters .add(new TokenAttribute(":", TokenType.DOTS));
+        specialCharacters .add(new TokenAttribute("<", TokenType.LESS_THAN));
+        specialCharacters .add(new TokenAttribute(">", TokenType.GREATER_THAN));
 
         specialCharacters .add( new TokenAttribute("+", TokenType.PLUS));
         specialCharacters .add(new TokenAttribute(";", TokenType.SEMI));

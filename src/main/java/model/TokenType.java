@@ -20,6 +20,8 @@ public enum  TokenType {
     EQUAL,
     DDOTS,
     LESS_EQUAL,
+    LESS_THAN,
+    GREATER_THAN,
     PLUS,
     SEMI,
     L_PAREN,
