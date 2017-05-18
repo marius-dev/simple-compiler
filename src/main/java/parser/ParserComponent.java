@@ -16,10 +16,12 @@ public class ParserComponent {
     private ScannerComponent scanner;
     private Token currentToken;
     private ArrayList<Triple> triples;
+    private boolean hasErrors;
 
     public ParserComponent(ScannerComponent scanner) {
         this.scanner = scanner;
         this.triples = new ArrayList<>();
+        this.setHasErrors(false);
     }
 
     public String parse() throws IOException {
@@ -194,6 +196,8 @@ public class ParserComponent {
 
 
     private void displayError(int errorCode) {
+        this.setHasErrors(true);
+
         String message = "";
         switch (errorCode) {
             case 1:
@@ -231,5 +235,21 @@ public class ParserComponent {
         System.out.println(message);
     }
 
+    public ArrayList<Triple> getTriples() {
+        return triples;
+    }
 
+    public ParserComponent setTriples(ArrayList<Triple> triples) {
+        this.triples = triples;
+        return this;
+    }
+
+    public boolean hasErrors() {
+        return hasErrors;
+    }
+
+    public ParserComponent setHasErrors(boolean hasErrors) {
+        this.hasErrors = hasErrors;
+        return this;
+    }
 }

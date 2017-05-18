@@ -48,75 +48,82 @@ public class ScannerComponent {
         int he = 0;
         char c;
 
-        //salveaza pozitia curenta din fisier
-        position = file.getChannel().position();
-
         Token token = new Token();
 
         //elimina spatiile albe
+        int bi = -1;
+        char chBuffer = (char) bi;
 
-        int bi = ' ';
-        char ch = (char) bi;
-
-        do{
+        do {
             bi = file.read();
-            ch = (char) bi;
+            chBuffer = (char) bi;
 
-            if (ch == '\n') {
+            if (chBuffer == '\n') {
                 line++;
             }
 
-        } while ((ch == '\n' || ch == '\t' || ch == ' ') && ((bi) != -1));
+        } while ((chBuffer == '\n' || chBuffer == '\t' || chBuffer == ' ') && ((bi) != -1));
 
 
-        token.setValue(ch + "");
+        //salveaza pozitia curenta din fisier
+        position = file.getChannel().position();
 
-        if ((bi) == -1) {
-            token.setType(TokenType.EOF);
-            token.setValue("tfy");
-        } else if (Character.isLetter(ch) || ch == '_') {
+
+        if(line>14){
+            char x =10;
+        }
+
+        token.setValue(chBuffer + "");
+
+        if (Character.isLetter(chBuffer) || chBuffer == '_') {
             bi = file.read();
-            ch = (char) bi;
+            chBuffer = (char) bi;
 
-            while (StringUtilService.isAlNum(ch) || ch == '_') {
-                token.appendValue(ch);
-
-                bi = file.read();
-                ch = (char) bi;
-            }
-
-            if (this.getDataTable().attributeIsDefined(DataTable.KEY_WORDS, token.getValue())) {
-                token.setType(
-                        this.getDataTable().getAttribute(DataTable.KEY_WORDS, token.getValue()).getTokenType()
-                );
-
+            if ((bi) == -1) {
+                token.setType(TokenType.EOF);
+                token.setValue("eof");
             } else {
-                token.setType(TokenType.ID);
+
+                while (StringUtilService.isAlNum(chBuffer) || chBuffer == '_') {
+                    token.appendValue(chBuffer);
+
+                    bi = file.read();
+                    chBuffer = (char) bi;
+                }
+
+                if (this.getDataTable().attributeIsDefined(DataTable.KEY_WORDS, token.getValue())) {
+                    token.setType(
+                            this.getDataTable().getAttribute(DataTable.KEY_WORDS, token.getValue()).getTokenType()
+                    );
+
+                } else {
+                    token.setType(TokenType.ID);
+                }
             }
 
-            //this.stepBackWith(-1);
-        } else if (Character.isDigit(ch)) {
-            c = ch;
+            this.stepBackWith(-1);
+        } else if (Character.isDigit(chBuffer)) {
+            c = chBuffer;
             bi = file.read();
-            ch = (char) bi;
+            chBuffer = (char) bi;
 
-            if (c == '0' && ch == 'X') {
-                token.appendValue(ch);
+            if (c == '0' && chBuffer == 'X') {
+                token.appendValue(chBuffer);
                 bi = file.read();
-                ch = (char) bi;
+                chBuffer = (char) bi;
 
                 while (
                         ((bi) != -1) &&
                                 (
-                                        Character.isDigit(ch) ||
-                                                ch == 'A' || ch == 'B' || ch == 'C' || ch == 'D' || ch == 'E' || ch == 'F'
+                                        Character.isDigit(chBuffer) ||
+                                                chBuffer == 'A' || chBuffer == 'B' || chBuffer == 'C' || chBuffer == 'D' || chBuffer == 'E' || chBuffer == 'F'
                                 )
                         ) {
                     he = 1;
-                    token.appendValue(ch);
+                    token.appendValue(chBuffer);
 
                     bi = file.read();
-                    ch = (char) bi;
+                    chBuffer = (char) bi;
                 }
                 if (he == 1) {
                     token.setType(TokenType.HEX);
@@ -131,66 +138,66 @@ public class ScannerComponent {
                     oc = false;
                 }
 
-                while (((bi) != -1) && Character.isDigit(ch)) {
-                    if ((ch != '0') && (ch != '1')) {
+                while (((bi) != -1) && Character.isDigit(chBuffer)) {
+                    if ((chBuffer != '0') && (chBuffer != '1')) {
                         bin = false;
                     }
-                    if ((ch > '7')) {
+                    if ((chBuffer > '7')) {
                         oc = false;
                     }
 
-                    token.appendValue(ch);
+                    token.appendValue(chBuffer);
 
                     bi = file.read();
-                    ch = (char) bi;
+                    chBuffer = (char) bi;
                 }
-                if (bin && ch == 'b') {
-                    token.appendValue(ch);
+                if (bin && chBuffer == 'b') {
+                    token.appendValue(chBuffer);
                     token.setType(TokenType.BIN);
 
                     bi = file.read();
-                    ch = (char) bi;
+                    chBuffer = (char) bi;
 
-                } else if (oc && ch == 'o') {
-                    token.appendValue(ch);
+                } else if (oc && chBuffer == 'o') {
+                    token.appendValue(chBuffer);
                     token.setType(TokenType.OCT);
 
                     bi = file.read();
-                    ch = (char) bi;
+                    chBuffer = (char) bi;
 
-                } else if (ch == '.') {
-                    token.appendValue(ch);
+                } else if (chBuffer == '.') {
+                    token.appendValue(chBuffer);
                     bi = file.read();
-                    ch = (char) bi;
+                    chBuffer = (char) bi;
 
-                    if (!Character.isDigit(ch)) {
+                    if (!Character.isDigit(chBuffer)) {
                         token.setType(TokenType.BAD);
                     }
 
-                    while (Character.isDigit(ch)) {
-                        token.appendValue(ch);
+                    while (Character.isDigit(chBuffer)) {
+                        token.appendValue(chBuffer);
                         token.setType(TokenType.REAL);
 
                         bi = file.read();
-                        ch = (char) bi;
+                        chBuffer = (char) bi;
                     }
 
-                    if (ch == 'e' || ch == 'E') {
-                        token.appendValue(ch);
+                    if (chBuffer == 'e' || chBuffer == 'E') {
+                        token.appendValue(chBuffer);
                         bi = file.read();
-                        ch = (char) bi;
+                        chBuffer = (char) bi;
 
-                        if (ch == '-' || Character.isDigit(ch)) {
-                            token.appendValue(ch);
+                        if (chBuffer == '-' || Character.isDigit(chBuffer)) {
+                            token.appendValue(chBuffer);
                             token.setType(TokenType.REAL);
 
                             bi = file.read();
-                            ch = (char) bi;
+                            chBuffer = (char) bi;
 
-                            while (Character.isDigit(ch)) {
-                                token.appendValue(ch);
+                            while (Character.isDigit(chBuffer)) {
+                                token.appendValue(chBuffer);
                                 bi = file.read();
-                                ch = (char) bi;
+                                chBuffer = (char) bi;
                             }
                         } else {
                             token.setType(TokenType.BAD);
@@ -202,35 +209,35 @@ public class ScannerComponent {
             }
 
             this.stepBackWith(-1);
-        } else if (ch == '\"') {
+        } else if (chBuffer == '\"') {
             bi = file.read();
-            ch = (char) bi;
+            chBuffer = (char) bi;
 
-            while ((bi != -1) && (ch != '\"')) {
-                token.appendValue(ch);
+            while ((bi != -1) && (chBuffer != '\"')) {
+                token.appendValue(chBuffer);
                 bi = file.read();
-                ch = (char) bi;
+                chBuffer = (char) bi;
             }
 
             if (token.getValue().contains("\"")) {
-                token.appendValue(ch);
+                token.appendValue(chBuffer);
                 token.setType(TokenType.SIR);
             } else {
                 token.setType(TokenType.BAD);
             }
-        } else if (ch == '\'') {
+        } else if (chBuffer == '\'') {
             bi = file.read();
-            ch = (char) bi;
+            chBuffer = (char) bi;
 
-            if (StringUtilService.isAlNum(ch)) {
-                token.appendValue(ch);
+            if (StringUtilService.isAlNum(chBuffer)) {
+                token.appendValue(chBuffer);
             }
 
             bi = file.read();
-            ch = (char) bi;
+            chBuffer = (char) bi;
 
-            if (ch == '\'') {
-                token.appendValue(ch);
+            if (chBuffer == '\'') {
+                token.appendValue(chBuffer);
                 token.setType(TokenType.CH_CON);
             } else {
                 token.setType(TokenType.BAD);
@@ -243,10 +250,10 @@ public class ScannerComponent {
             );
 
             bi = file.read();
-            ch = (char) bi;
+            chBuffer = (char) bi;
 
-            if (this.getDataTable().attributeIsDefined(DataTable.SPECIAL_CHARACTER_SEQUENCE, token.getValue() + ch)) {
-                token.appendValue(ch);
+            if (this.getDataTable().attributeIsDefined(DataTable.SPECIAL_CHARACTER_SEQUENCE, token.getValue() + chBuffer)) {
+                token.appendValue(chBuffer);
                 token.setType(
                         this.getDataTable().getAttribute(DataTable.SPECIAL_CHARACTER_SEQUENCE, token.getValue()).getTokenType()
                 );
