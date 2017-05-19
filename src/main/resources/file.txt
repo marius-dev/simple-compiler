@@ -1,16 +1,7 @@
-begin
-
-z =100;
-a =02342;
-b ="dfgf0x323dgdg";
-h = 0X100;
-
-
-if( 0) then
-
-  if( 0 + 0 ) then
-        v = 31 + 4
-  else
-        n=1
-
-end
+int ana ;
+bool b ;
+int c ;
+int ana1 ( ) {
+    ana = 4 + b * c ;
+    return ana;
+}

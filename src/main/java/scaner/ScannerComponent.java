@@ -126,7 +126,7 @@ public class ScannerComponent {
                     chBuffer = (char) bi;
                 }
                 if (he == 1) {
-                    token.setType(TokenType.HEX);
+                    token.setType(TokenType.HEX_NUMBER);
                 } else {
                     token.setType(TokenType.BAD);
                 }
@@ -153,14 +153,14 @@ public class ScannerComponent {
                 }
                 if (bin && chBuffer == 'b') {
                     token.appendValue(chBuffer);
-                    token.setType(TokenType.BIN);
+                    token.setType(TokenType.BIN_NUMBER);
 
                     bi = file.read();
                     chBuffer = (char) bi;
 
                 } else if (oc && chBuffer == 'o') {
                     token.appendValue(chBuffer);
-                    token.setType(TokenType.OCT);
+                    token.setType(TokenType.OCT_NUMBER);
 
                     bi = file.read();
                     chBuffer = (char) bi;
@@ -176,7 +176,7 @@ public class ScannerComponent {
 
                     while (Character.isDigit(chBuffer)) {
                         token.appendValue(chBuffer);
-                        token.setType(TokenType.REAL);
+                        token.setType(TokenType.REAL_NUMBER);
 
                         bi = file.read();
                         chBuffer = (char) bi;
@@ -189,7 +189,7 @@ public class ScannerComponent {
 
                         if (chBuffer == '-' || Character.isDigit(chBuffer)) {
                             token.appendValue(chBuffer);
-                            token.setType(TokenType.REAL);
+                            token.setType(TokenType.REAL_NUMBER);
 
                             bi = file.read();
                             chBuffer = (char) bi;
@@ -204,7 +204,7 @@ public class ScannerComponent {
                         }
                     }
                 } else {
-                    token.setType(TokenType.INT);
+                    token.setType(TokenType.INT_NUMBER);
                 }
             }
 
@@ -221,7 +221,7 @@ public class ScannerComponent {
 
             if (token.getValue().contains("\"")) {
                 token.appendValue(chBuffer);
-                token.setType(TokenType.SIR);
+                token.setType(TokenType.STRING_CONSTANT);
             } else {
                 token.setType(TokenType.BAD);
             }
@@ -238,7 +238,7 @@ public class ScannerComponent {
 
             if (chBuffer == '\'') {
                 token.appendValue(chBuffer);
-                token.setType(TokenType.CH_CON);
+                token.setType(TokenType.STRING_CONSTANT);
             } else {
                 token.setType(TokenType.BAD);
             }

@@ -1,13 +1,12 @@
 package util;
 
-import model.Token;
 import model.TokenType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by ilies on 16-May-17.
+ *
  */
 public class DataTable {
     public static final String KEY_WORDS  = "key_words";
@@ -21,7 +20,7 @@ public class DataTable {
     }
 
     private void initDataTable(){
-        map = new HashMap<String, ArrayList<TokenAttribute>>();
+        map = new HashMap<>();
 
         map.put(KEY_WORDS, this.getKeyWords());
         map.put(SPECIAL_CHARACTERS, this.getSpecialCharacters());
@@ -30,36 +29,67 @@ public class DataTable {
 
     private  ArrayList<TokenAttribute> getKeyWords(){
         ArrayList<TokenAttribute> keyWords = new ArrayList<TokenAttribute>();
+        //DFD
         keyWords.add( new TokenAttribute("if", TokenType.IF));
-        keyWords.add(new TokenAttribute("then", TokenType.THEN));
         keyWords.add(new TokenAttribute("else", TokenType.ELSE));
-        keyWords.add(new TokenAttribute("begin", TokenType.BEGIN));
-        keyWords.add(new TokenAttribute("end", TokenType.END));
+        keyWords.add( new TokenAttribute("while", TokenType.WHILE));
+        keyWords.add(new TokenAttribute("return", TokenType.RETURN));
+        keyWords.add(new TokenAttribute("cin", TokenType.CIN));
+        keyWords.add(new TokenAttribute("cout", TokenType.COUT));
+
+        //DATA TYPES
+        keyWords.add(new TokenAttribute("int", TokenType.INT_DATATYPE));
+        keyWords.add(new TokenAttribute("bool", TokenType.BOOL_DATATYPE));
+        keyWords.add(new TokenAttribute("float", TokenType.FLOAT_DATATYPE));
+        keyWords.add(new TokenAttribute("char", TokenType.CHAR_DATATYPE));
+        keyWords.add(new TokenAttribute("string", TokenType.CHAR_DATATYPE));
+        keyWords.add(new TokenAttribute("void", TokenType.VOID));
 
         return keyWords;
     }
 
     private  ArrayList<TokenAttribute> getSpecialCharacters(){
         ArrayList<TokenAttribute> specialCharacters = new ArrayList<TokenAttribute>();
-        specialCharacters .add( new TokenAttribute(",", TokenType.COMMA));
-        specialCharacters .add(new TokenAttribute("=", TokenType.EQUAL));
+        specialCharacters .add(new TokenAttribute(",", TokenType.COMMA));
+        specialCharacters .add(new TokenAttribute(";", TokenType.SEMICOLON));
+
+        specialCharacters .add(new TokenAttribute("+", TokenType.PLUS_OP));
+        specialCharacters .add(new TokenAttribute("-", TokenType.MINUS_OP));
+        specialCharacters .add(new TokenAttribute("*", TokenType.MUL_OP));
+        specialCharacters .add(new TokenAttribute("-", TokenType.MINUS_OP));
+        specialCharacters .add(new TokenAttribute("/", TokenType.DIVIDE_OP));
+        specialCharacters .add(new TokenAttribute("!", TokenType.NOT_OP));
+        specialCharacters .add(new TokenAttribute("=", TokenType.ASSIGN_OP));
+        specialCharacters .add(new TokenAttribute("|", TokenType.OR_OP));
+        specialCharacters .add(new TokenAttribute("&", TokenType.AND_OP));
+
+
         specialCharacters .add(new TokenAttribute(".", TokenType.DOT));
-        specialCharacters .add(new TokenAttribute(":", TokenType.DOTS));
         specialCharacters .add(new TokenAttribute("<", TokenType.LESS_THAN));
         specialCharacters .add(new TokenAttribute(">", TokenType.GREATER_THAN));
 
-        specialCharacters .add( new TokenAttribute("+", TokenType.PLUS));
-        specialCharacters .add(new TokenAttribute(";", TokenType.SEMI));
-        specialCharacters .add(new TokenAttribute("(", TokenType.L_PAREN));
-        specialCharacters .add(new TokenAttribute(")", TokenType.R_PAREN));
+
+
+        specialCharacters .add(new TokenAttribute("(", TokenType.L_ROUND_BRACKET));
+        specialCharacters .add(new TokenAttribute(")", TokenType.R_ROUND_BRACKET));
+        specialCharacters .add(new TokenAttribute("[", TokenType.L_SQ_BRACKET));
+        specialCharacters .add(new TokenAttribute("]", TokenType.R_SQ_BRACKET));
+        specialCharacters .add(new TokenAttribute("{", TokenType.L_CURLY_BRACKET));
+        specialCharacters .add(new TokenAttribute("}", TokenType.R_CURLY_BRACKET));
 
         return specialCharacters ;
     }
 
     private  ArrayList<TokenAttribute> getSpecialCharacterSequence(){
         ArrayList<TokenAttribute> specialCharacterSequence = new ArrayList<TokenAttribute>();
-        specialCharacterSequence .add( new TokenAttribute(":=", TokenType.DDOTS));
-        specialCharacterSequence .add( new TokenAttribute("<=", TokenType.LESS_EQUAL));
+
+        specialCharacterSequence .add( new TokenAttribute("<=", TokenType.LESS_EQ));
+        specialCharacterSequence .add( new TokenAttribute(">=", TokenType.GREAT_EQ));
+        specialCharacterSequence .add( new TokenAttribute("==", TokenType.EQUAL_OP));
+        specialCharacterSequence .add( new TokenAttribute("!=", TokenType.DIFF_OP));
+        specialCharacterSequence .add( new TokenAttribute("&&", TokenType.AND_OP));
+        specialCharacterSequence .add( new TokenAttribute("||", TokenType.OR_OP));
+
 
         return specialCharacterSequence ;
     }
