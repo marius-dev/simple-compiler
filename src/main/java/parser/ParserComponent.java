@@ -35,7 +35,6 @@ public class ParserComponent {
         this.generate("root", "TEMP", "", 0);
     }
 
-
     private void generate(String n, String type, String val, int number) {
         Node k, p;
         k = new Node(n, type, val);
