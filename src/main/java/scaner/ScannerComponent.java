@@ -74,8 +74,10 @@ public class ScannerComponent {
         }
 
         token.setValue(chBuffer + "");
-
-        if (Character.isLetter(chBuffer) || chBuffer == '_') {
+        if ((bi) == -1) {
+            token.setType(TokenType.EOF);
+            token.setValue("eof");
+        } else if (Character.isLetter(chBuffer) || chBuffer == '_') {
             bi = file.read();
             chBuffer = (char) bi;
 
@@ -101,13 +103,13 @@ public class ScannerComponent {
                 }
             }
 
-            this.stepBackWith(-1);
+            this.skip(-1);
         } else if (Character.isDigit(chBuffer)) {
             c = chBuffer;
             bi = file.read();
             chBuffer = (char) bi;
 
-            if (c == '0' && chBuffer == 'X') {
+            if (c == '0' && chBuffer == 'x') {
                 token.appendValue(chBuffer);
                 bi = file.read();
                 chBuffer = (char) bi;
@@ -208,7 +210,7 @@ public class ScannerComponent {
                 }
             }
 
-            this.stepBackWith(-1);
+            this.skip(-1);
         } else if (chBuffer == '\"') {
             bi = file.read();
             chBuffer = (char) bi;
@@ -258,9 +260,10 @@ public class ScannerComponent {
                         this.getDataTable().getAttribute(DataTable.SPECIAL_CHARACTER_SEQUENCE, token.getValue()).getTokenType()
                 );
 
+                this.skip(1);
             }
 
-            this.stepBackWith(-1);
+            this.skip(-1);
         } else {
             token.setType(TokenType.BAD);
         }
@@ -273,7 +276,7 @@ public class ScannerComponent {
         this.file.getChannel().position(pos);
     }
 
-    public void stepBackWith(int steps) throws IOException {
+    public void skip(int steps) throws IOException {
         long posO = file.getChannel().position();
         file.getChannel().position(posO + steps);
     }

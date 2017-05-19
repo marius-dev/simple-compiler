@@ -1,7 +1,18 @@
 int ana ;
 bool b ;
 int c ;
-int ana1 ( ) {
-    ana = 4 + b * c ;
-    return ana;
+
+int test (int a, int c ) {
+    if(a != c){
+        z = a;
+    } else {
+        while ((a != 1 && c <= 0x1232AD) || (b == false || c == a  )){
+            c = a+c;
+        }
+
+        a = c - 1;
+    }
+
+    return c;
 }
+

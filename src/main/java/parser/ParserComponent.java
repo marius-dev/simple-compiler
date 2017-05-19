@@ -27,7 +27,12 @@ public class ParserComponent {
     public ParserComponent(ScannerComponent scanner) {
         this.scanner = scanner;
         this.errorMessages = new ArrayList<>();
-
+        this.newLine = new SemanticLine();
+        this.currentListNode = new ListNode();
+        this.tSym = new SemanticTable();
+        this.ar = new AbstractSyntaxTree();
+        this.currentNode = new Node(null, null, null);
+        this.generate("root", "TEMP", "", 0);
     }
 
 
@@ -78,14 +83,14 @@ public class ParserComponent {
             //newLine = tSym.first;
         } else {
             currentListNode = tSym.first;
-            while (currentListNode.line.name.compareTo(newLine.name) != 0) {//todo check strcmp
+            while (currentListNode.line.name.compareTo(newLine.name) == 0) {//todo check strcmp
                 if (currentListNode.next == null) {
                     break;
                 }
                 currentListNode = currentListNode.next;
             }
 
-            if (currentListNode.line.name.compareTo(newLine.name) == 0) {
+            if (currentListNode.line.name.compareTo(newLine.name) != 0) {
                 smbTableError(0);
             } else {
                 k = new ListNode();
@@ -145,7 +150,7 @@ public class ParserComponent {
             currentToken = this.getNextToken();
         }
 
-        if (currentToken.getType() == TokenType.EOF) {
+        if (currentToken.getType() != TokenType.EOF) {
             syntax_error(currentToken, "end of file");
         } else {
             match(EOF);
@@ -215,15 +220,19 @@ public class ParserComponent {
         match(L_ROUND_BRACKET);
         currentToken = this.getNextToken();
 
-        if (currentToken.getType() == TokenType.R_ROUND_BRACKET)
+        if (currentToken.getType() == TokenType.R_ROUND_BRACKET) {
             match(TokenType.R_ROUND_BRACKET);
 
-        else if (this.isDataType(currentToken)) {
+        }else if (this.isDataType(currentToken)) {
 
             generate("parameters", "TEMP", "", 0);
             formalsList();
-            currentNode = currentNode.up;
-
+            currentToken = getNextToken();
+            if(currentToken.getType() == TokenType.R_ROUND_BRACKET){
+                currentNode = currentNode.up;
+            }else {
+                syntax_error(currentToken, "RPAR or formalsList");
+            }
         } else {
             syntax_error(currentToken, "RPAR or formalsList");
         }
@@ -701,7 +710,7 @@ public class ParserComponent {
                         (currentToken.getType() == MINUS_OP) ||
                         (currentToken.getType() == L_ROUND_BRACKET) ||
                         (currentToken.getType() == ID) ||
-                        (currentToken.getType() == INT_DATATYPE) ||
+                        (this.isNumber(currentToken)) ||
                         (currentToken.getType() == STRING_CONSTANT) ||
                         (currentToken.getType() == TRUE) ||
                         (currentToken.getType() == FALSE)
@@ -847,7 +856,7 @@ public class ParserComponent {
     }
 
     private void syntax_error(Token tk, String val) {
-        errorMessages.add("\nEroare de sintaxa. Se astepta token-ul(sau un token al non-terminalului) " + val + " in locul token-ului" + tk.getValue() + "\n");
+        errorMessages.add("\nEroare de sintaxa. Se astepta token-ul(sau un token al non-terminalului) " + val + " in locul token-ului " + tk.getValue() + "\n");
     }
 
     private Token getNextToken() {
@@ -881,10 +890,10 @@ public class ParserComponent {
 
         return (
                 (currentToken.getType() == TokenType.INT_DATATYPE) ||
-                (currentToken.getType() == TokenType.BOOL_DATATYPE) ||
-                (currentToken.getType() == TokenType.FLOAT_DATATYPE) ||
-                (currentToken.getType() == TokenType.CHAR_DATATYPE) ||
-                (currentToken.getType() == TokenType.VOID)
+                        (currentToken.getType() == TokenType.BOOL_DATATYPE) ||
+                        (currentToken.getType() == TokenType.FLOAT_DATATYPE) ||
+                        (currentToken.getType() == TokenType.CHAR_DATATYPE) ||
+                        (currentToken.getType() == TokenType.VOID)
         );
     }
 
