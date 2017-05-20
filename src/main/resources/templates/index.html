@@ -1,0 +1,168 @@
+<html>
+  <head>
+    <title>Compiler</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="http://files.aw20.net/jquery-linedtextarea/jquery-linedtextarea.js"></script>
+    <link href="http://files.aw20.net/jquery-linedtextarea/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
+    <style>
+        .vresize {
+          resize: vertical;
+        }
+        #encJs {
+        	width: 100%;
+        	min-height: 50%;
+        }
+
+        .notification-area {
+		  float: right;
+		  width: 30%
+		}
+		.code-area {
+		  float: left;
+		  width: 70%
+		}
+        .alert {
+            padding: 20px;
+            background-color: #f44336;
+            color: white;
+            opacity: 1;
+            transition: opacity 0.6s;
+            margin-bottom: 15px;
+        }
+        .alert.warning {background-color: #ff9800;}
+        .alert.success {background-color: #4CAF50;}
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .closebtn:hover {
+            color: black;
+        }
+
+		.button {
+		    background-color: #4CAF50; /* Green */
+		    border: none;
+		    color: white;
+		    padding: 15px 32px;
+		    text-align: center;
+		    text-decoration: none;
+		    display: inline-block;
+		    font-size: 16px;
+		    margin: 4px 2px;
+		    cursor: pointer;
+		}
+
+		.button-compile{
+		    background-color: white; 
+		    color: black; 
+		    border: 2px solid #008CBA;
+		}
+
+    </style>
+  </head>
+  <body>
+  	  <h1>Simple Compiler</h1>
+ 	  <button id = "compile-button" class="button button-compile">Compile</button>
+      <div class="code-area">
+        <textarea class="form-control vresize lined" id="encJs"></textarea>
+      </div>
+      <div class="notification-area">
+    
+      </div>
+
+
+      <script>
+          	$('#encJs').linedtextarea(
+				{selectedLine: 1}
+			);
+
+			$("#compile-button").click(function(){
+
+		  		var textAreaContent = $("#encJs").val();
+
+
+				var settings = {
+				  "async": true,
+				  "crossDomain": true,
+				  "url": "http://localhost:8080/compile",
+				  "method": "POST",
+				  "headers": {
+				    "content-type": "text/plain",
+				    "cache-control": "no-cache"
+				  },
+				  "data": textAreaContent
+				};
+
+				var request = 	$.ajax(settings);
+
+				request.done(function(msg) {
+				    console.log(msg);
+                    var element = $(
+                        '<div class="alert success">'+
+                            '<span class="closebtn">&times;</span>'+
+                            '<strong>Totul pare in regula!</strong>.'+
+                        '</div>'
+                    );
+                    $('.notification-area').html(element);
+
+                    $(".closebtn").click(function(event) {
+                        event.preventDefault();
+                        $(this).parent().remove();
+                    });
+				});
+
+				request.fail(function(jqXHR, textStatus) {
+				  var result = JSON.parse(jqXHR.responseText);
+				  if(result.constructor === Array){
+                      var elements = $();
+                      result.forEach(function (p1) {
+                          elements = elements.add(
+                              '<div class="alert warning">'+
+                                  '<span class="closebtn"> &times;</span>'+
+                              '<strong>Warning!</strong> '+p1+
+                              '</div>'
+                          );
+                      });
+                      $('.notification-area').html(elements);
+                      $(".closebtn").click(function(event) {
+                          event.preventDefault();
+                          $(this).parent().remove();
+                      })
+                  }else {
+                      alert(jqXHR.responseText);
+                  }
+				});
+			});
+
+            function displayDemo() {
+                var settings = {
+                    "async": true,
+                    "crossDomain": true,
+                    "url": "http://localhost:8080/get_file",
+                    "method": "GET",
+                    "headers": {
+                        "content-type": "text/plain",
+                        "cache-control": "no-cache"
+                    }
+                };
+
+                $.ajax(settings).done(function (response) {
+                    $("#encJs").val(response);
+                });
+            }
+
+            $( document ).ready(function() {
+                displayDemo();
+            });
+
+      </script>
+  </body>
+</html>
