@@ -18,6 +18,8 @@ public class ParserComponent {
     private Token currentToken;
     private ArrayList<String> errorMessages;
 
+    private ArrayList<Token> tokenStack;
+
     private AbstractSyntaxTree ar;
     private SemanticTable tSym;
     private Node currentNode;
@@ -31,6 +33,8 @@ public class ParserComponent {
         this.currentListNode = new ListNode();
         this.tSym = new SemanticTable();
         this.ar = new AbstractSyntaxTree();
+
+        this.tokenStack = new ArrayList<>();
 
         this.currentNode = new Node(new NodeData());
         this.generate("root", "TEMP", "", 0);
@@ -861,7 +865,7 @@ public class ParserComponent {
     }
 
     private void syntax_error(Token tk, String val) {
-        errorMessages.add("\nEroare de sintaxa. Se astepta token-ul(sau un token al non-terminalului) " + val + " in locul token-ului " + tk.getValue() + "\n");
+        errorMessages.add("\nEroare de sintaxa. Se astepta token-ul(sau un token al non-terminalului) \"" + val + "\" in locul token-ului \"" + tk.getValue() + "\"\n");
     }
 
     private Token getNextToken() {
@@ -871,6 +875,8 @@ public class ParserComponent {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.tokenStack.add(token);
 
         if (token.getType() == BAD) {
             this.errorMessages.add("Bad token error on line: " + token.getLine() + " Unknown token: '" + token.getValue() + "'");
